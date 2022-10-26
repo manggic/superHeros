@@ -1,15 +1,23 @@
 import React, { useState } from "react";
-import { MDBInput, MDBBtn } from "mdb-react-ui-kit";
-const axios = require("axios").default;
+import {
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+  MDBCardTitle,
+  MDBCardText,
+  MDBBtn,
+} from "mdb-react-ui-kit";
+import Link from "next/link";
 import { useRouter } from "next/router";
+const axios = require("axios").default;
 
-function About() {
-  const [form, setForm] = useState({
-    superHero: "",
-    realName: "",
-  });
-
+const EachHero = ({ hero, id }) => {
   const router = useRouter();
+
+  const [form, setForm] = useState({
+    superHero: hero.superHero,
+    realName: hero.realName,
+  });
 
   const handleChange = (e) => {
     setForm({
@@ -20,18 +28,20 @@ function About() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await axios("http://localhost:3000/api/hero", {
+      const res = await axios(`http://localhost:3000/api/edithero`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        data: JSON.stringify(form),
+        data: JSON.stringify({ ...form, id }),
       });
-
       alert('added succesfully')
+
       router.push("/");
     } catch (error) {
+      alert("updation failed");
     }
   };
 
@@ -45,6 +55,7 @@ function About() {
           type="text"
           onChange={handleChange}
           name="superHero"
+          value={form.superHero}
         />
         <MDBInput
           className="my-3"
@@ -53,11 +64,23 @@ function About() {
           type="text"
           onChange={handleChange}
           name="realName"
+          value={form.realName}
         />
         <MDBBtn type="submit">Save</MDBBtn>
       </form>
     </div>
   );
+};
+
+export async function getServerSideProps(context) {
+  const { id } = context.query;
+
+  const res = await axios(`http://localhost:3000/api/hero/${id}`);
+
+  const hero = res.data.data;
+  return {
+    props: { hero, id }, // will be passed to the page component as props
+  };
 }
 
-export default About;
+export default EachHero;

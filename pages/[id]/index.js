@@ -25,12 +25,10 @@ const EachHero = ({hero}) => {
 
 export async function getServerSideProps(context) {
 
-   console.log('context', context.query)
 
   const {id} = context.query
 
     const res = await axios(`http://localhost:3000/api/hero/${id}`)
-    console.log('res', res.data.data)
   
     const hero =  res.data.data
     return {

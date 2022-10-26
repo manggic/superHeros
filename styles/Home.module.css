@@ -115,8 +115,7 @@
   }
 }
 
-
-.newFooter{
+.newFooter {
   justify-content: center;
   height: 60px;
   background: rgb(214, 51, 132);
@@ -125,4 +124,7 @@
   font-size: 20px;
   align-items: center;
   display: flex;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
 }

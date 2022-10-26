@@ -17,16 +17,14 @@ export default function Home({ heros = [] }) {
   const router = useRouter();
 
   const handleDelete = async (id) => {
-    console.log("deleting....", id);
     const res = await axios.delete(`http://localhost:3000/api/hero/${id}`);
 
-    console.log("response ==== ", res);
     router.push("/");
   };
 
   return (
     <div
-      style={{ minHeight: "84vh", paddingTop: "10px" }}
+      style={{ paddingTop: "10px" }}
       className="container"
     >
       <h1 className="display-6">SuperHero Identity Manager</h1>
@@ -36,14 +34,15 @@ export default function Home({ heros = [] }) {
             <MDBCard
               className="border border-2 my-2"
               style={{ maxWidth: "440px" }}
+              key={hero}
             >
               <MDBCardBody>
                 <MDBCardTitle>{hero.superHero}</MDBCardTitle>
                 <MDBCardText>Reveal Identity</MDBCardText>
-                <Link href={`/${hero._id}`}>
+                <Link passHref href={`/${hero._id}`}>
                   <MDBBtn className="mx-1">View Hero</MDBBtn>
                 </Link>
-                <Link href="/">
+                <Link passHref href={`/edit/${hero._id}`}>
                   <MDBBtn className="mx-1">Edit Hero</MDBBtn>
                 </Link>
                 <MDBBtn onClick={() => handleDelete(hero._id)} className="mx-1 btn btn-danger">
@@ -60,7 +59,6 @@ export default function Home({ heros = [] }) {
 
 export async function getServerSideProps(context) {
   const res = await axios("http://localhost:3000/api/hero");
-  console.log("res", res.data.data);
 
   const heros = res.data.data;
   return {
